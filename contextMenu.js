@@ -297,8 +297,8 @@ angular.module('ui.bootstrap.contextMenu', [])
         };
 
         if (attrs.hasOwnProperty('contextLeftClick')) {
-            element.on('click', openMenus);
-            element.on('click', function(e) {
+            element.on('click ', openMenus);
+            element.on('click ', function(e) {
                 if ($(e.target).hasClass('dropdown')) {
                     $(event.currentTarget).removeClass('context');
                     removeContextMenus();
