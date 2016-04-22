@@ -12,7 +12,7 @@ angular.module('ui.bootstrap.contextMenu', [])
 })
 .directive('contextMenu', ["$parse", "$q", "CustomService", "$sce", function ($parse, $q, custom, $sce) {
 
-    var contextMenus = [];
+     var contextMenus = [];
     var $currentContextMenu = null;
     var defaultItemText = "New Item";
 
@@ -258,7 +258,7 @@ angular.module('ui.bootstrap.contextMenu', [])
 
         handlePromises($ul, level, event, $promises);
 
-        $contextMenu.on("mousedown", function (e) {
+        $contextMenu.on("mousedown touchstart", function (e) {
             if ($(e.target).hasClass('dropdown')) {
                 $(event.currentTarget).removeClass('context');
                 removeContextMenus();
@@ -275,20 +275,36 @@ angular.module('ui.bootstrap.contextMenu', [])
 
         contextMenus.push($ul);
     };
-    return function ($scope, element, attrs) {
-        element.on('contextmenu', function (event) {
+    return function($scope, element, attrs) {
+        var openMenus = function(event) {
+
             event.stopPropagation();
-            $scope.$apply(function () {
+            $scope.$apply(function() {
                 event.preventDefault();
                 var options = $scope.$eval(attrs.contextMenu);
                 var model = $scope.$eval(attrs.model);
                 if (options instanceof Array) {
-                    if (options.length === 0) { return; }
+                    if (options.length === 0) {
+                        return;
+                    }
                     renderContextMenu($scope, event, options, model);
                 } else {
                     throw '"' + attrs.contextMenu + '" not an array';
                 }
             });
-        });
-    };
+
+
+        };
+
+        if (attrs.hasOwnProperty('contextLeftClick')) {
+            element.on('click', openMenus);
+            element.on('click', function(e) {
+                if ($(e.target).hasClass('dropdown')) {
+                    $(event.currentTarget).removeClass('context');
+                    removeContextMenus();
+                }
+            });
+        }
+        element.on('contextmenu', openMenus);
+    }
 }]);
