@@ -12,7 +12,7 @@ angular.module('ui.bootstrap.contextMenu', [])
 })
 .directive('contextMenu', ["$parse", "$q", "CustomService", "$sce", function ($parse, $q, custom, $sce) {
 
-     var contextMenus = [];
+    var contextMenus = [];
     var $currentContextMenu = null;
     var defaultItemText = "New Item";
 
@@ -279,14 +279,12 @@ angular.module('ui.bootstrap.contextMenu', [])
         var openMenus = function(event) {
 
             event.stopPropagation();
-            $scope.$apply(function() {
+            $scope.$apply(function(){
                 event.preventDefault();
                 var options = $scope.$eval(attrs.contextMenu);
                 var model = $scope.$eval(attrs.model);
                 if (options instanceof Array) {
-                    if (options.length === 0) {
-                        return;
-                    }
+                    if (options.length === 0) { return; }
                     renderContextMenu($scope, event, options, model);
                 } else {
                     throw '"' + attrs.contextMenu + '" not an array';
